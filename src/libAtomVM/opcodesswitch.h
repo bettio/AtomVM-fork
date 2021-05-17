@@ -39,6 +39,7 @@
 #define ENABLE_OTP21
 #define ENABLE_OTP22
 #define ENABLE_OTP23
+#define ENABLE_OTP24
 
 //#define ENABLE_TRACE
 
@@ -4857,6 +4858,124 @@ static bool maybe_call_native(Context *ctx, AtomString module_name, AtomString f
                 NEXT_INSTRUCTION(next_off);
                 break;
             }
+#endif
+
+#ifdef ENABLE_OTP24
+            case OP_MAKE_FUN3: {
+                fprintf(stderr, "make fun3\n");
+                int next_off = 1;
+                int fun_index;
+                DECODE_LABEL(fun_index, code, i, next_off, next_off)
+
+                fprintf(stderr,"fun_index: %i\n", fun_index);
+
+                dreg_t dreg;
+                dreg_type_t dreg_type;
+                DECODE_DEST_REGISTER(dreg, dreg_type, code, i, next_off, next_off);
+
+                next_off++; //skip extended list tag
+                int size;
+                DECODE_INTEGER(size, code, i, next_off, next_off)
+
+                fprintf(stderr, "size: %i\n", size);
+
+                abort();
+
+                TRACE("make_fun/3, fun_index=%i\n", fun_index);
+                #ifdef IMPL_EXECUTE_LOOP
+                    term f = make_fun(ctx, mod, fun_index);
+                    if (term_is_invalid_term(f)) {
+                        RAISE_ERROR(OUT_OF_MEMORY_ATOM);
+                    } else {
+                        WRITE_REGISTER(dreg_type, dreg, f);
+                    }
+                #endif
+
+                NEXT_INSTRUCTION(next_off);
+                break;
+            }
+
+            case OP_INIT_YREGS: {
+                #ifdef IMPL_CODE_LOADER
+                    TRACE("init_yregs/1\n");
+                #endif
+
+                int next_off = 1;
+                next_off++; //skip extended list tag
+                int size;
+                DECODE_INTEGER(size, code, i, next_off, next_off);
+
+                for (int j = 0; j < size; j++) {
+                    int reg;
+                    DECODE_INTEGER(reg, code, i, next_off, next_off)
+
+                    #ifdef IMPL_EXECUTE_LOOP
+                        ctx->e[reg] = term_nil();
+                    #endif
+                }
+
+                NEXT_INSTRUCTION(next_off);
+                break;
+            }
+
+            case OP_RECV_MARKER_BIND: {
+                int next_off = 1;
+                dreg_t dreg;
+                dreg_type_t dreg_type;
+                DECODE_DEST_REGISTER(dreg, dreg_type, code, i, next_off, next_off);
+
+                term arg1;
+                DECODE_COMPACT_TERM(arg1, code, i, next_off, next_off)
+
+                #ifdef IMPL_CODE_LOADER
+                    TRACE("recv_marker_reserve/1\n");
+                #endif
+
+                NEXT_INSTRUCTION(next_off);
+                break;
+            }
+
+            case OP_RECV_MARKER_CLEAR: {
+                int next_off = 1;
+                dreg_t dreg;
+                dreg_type_t dreg_type;
+                DECODE_DEST_REGISTER(dreg, dreg_type, code, i, next_off, next_off);
+
+                #ifdef IMPL_CODE_LOADER
+                    TRACE("recv_marker_clear/1\n");
+                #endif
+
+                NEXT_INSTRUCTION(next_off);
+                break;
+            }
+
+            case OP_RECV_MARKER_RESERVE: {
+                int next_off = 1;
+                dreg_t dreg;
+                dreg_type_t dreg_type;
+                DECODE_DEST_REGISTER(dreg, dreg_type, code, i, next_off, next_off);
+
+                #ifdef IMPL_CODE_LOADER
+                    TRACE("recv_marker_reserve/1\n");
+                #endif
+
+                NEXT_INSTRUCTION(next_off);
+                break;
+            }
+
+            case OP_RECV_MARKER_USE: {
+                int next_off = 1;
+                dreg_t dreg;
+                dreg_type_t dreg_type;
+                DECODE_DEST_REGISTER(dreg, dreg_type, code, i, next_off, next_off);
+
+                #ifdef IMPL_CODE_LOADER
+                    TRACE("recv_marker_use/1\n");
+                #endif
+
+                NEXT_INSTRUCTION(next_off);
+                break;
+           }
 #endif
 
             default:

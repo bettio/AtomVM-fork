@@ -35,13 +35,23 @@ test() ->
     ok = test_cast(),
     ok = test_info(),
     ok = test_start_link(),
+    %%%
+    erlang:display(test_init_exception_started),
     ok = test_init_exception(),
+    erlang:display(test_init_exception_done),
+    %%%
     ok = test_late_reply(),
+    erlang:display(test_late_reply_done),
     ok = test_concurrent_clients(),
+    erlang:display(test_concurrent_clients_done),
     ok = test_timeout_call(),
+    erlang:display(test_timeout_call_done),
     ok = test_timeout_cast(),
+    erlang:display(test_timeout_cast_done),
     ok = test_timeout_info(),
+    erlang:display(test_timeout_info_done),
     ok = test_register(),
+    erlang:display(test_register_done),
     ok.
 
 test_call() ->

@@ -30,6 +30,7 @@
 }).
 
 test() ->
+    erlang:display(starting_gen_statem),
     ok = test_call(),
     ok = test_cast(),
     ok = test_info(),

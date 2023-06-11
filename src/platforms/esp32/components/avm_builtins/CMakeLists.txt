@@ -40,4 +40,5 @@ idf_build_set_property(
     LINK_OPTIONS "-Wl,--whole-archive ${CMAKE_CURRENT_BINARY_DIR}/lib${COMPONENT_NAME}.a -Wl,--no-whole-archive"
     APPEND)
 
+target_compile_options(${COMPONENT_LIB} INTERFACE "-std=gnu11")
 target_compile_features(${COMPONENT_LIB} INTERFACE c_std_11)

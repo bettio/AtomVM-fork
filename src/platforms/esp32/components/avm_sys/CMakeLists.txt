@@ -34,6 +34,7 @@ idf_component_register(
     PRIV_REQUIRES "libatomvm"
 )
 
+target_compile_options(${COMPONENT_LIB} INTERFACE "-std=gnu11")
 target_compile_features(${COMPONENT_LIB} INTERFACE c_std_11)
 
 idf_component_get_property(soc_dir soc COMPONENT_DIR)

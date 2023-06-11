@@ -25,4 +25,5 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/../../../../libAtomVM" "libAtomVM"
 target_link_libraries(${COMPONENT_LIB}
     INTERFACE libAtomVM "-u platform_nifs_get_nif" "-u platform_defaultatoms_init")
 
+target_compile_options(${COMPONENT_LIB} INTERFACE "-std=gnu11")
 target_compile_features(${COMPONENT_LIB} INTERFACE c_std_11)

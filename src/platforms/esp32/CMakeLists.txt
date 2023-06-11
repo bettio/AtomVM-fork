@@ -29,11 +29,6 @@ endif()
 
 project(atomvm-esp32)
 
-idf_build_get_property(c_compile_options C_COMPILE_OPTIONS)
-list(REMOVE_ITEM c_compile_options -std=gnu99)
-list(APPEND c_compile_options -std=gnu11)
-idf_build_set_property(C_COMPILE_OPTIONS ${c_compile_options})
-
 # Options that make sense for this platform
 option(AVM_DISABLE_SMP "Disable SMP." OFF)
 option(AVM_USE_32BIT_FLOAT "Use 32 bit floats." OFF)

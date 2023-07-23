@@ -38,7 +38,7 @@
         #{
             name => "AtomVM Core BEAM Library",
             offset =>  "0x1D0000",
-            path => ["${BUILD_DIR}/../../../../build/libs/atomvmlib.avm"]
+            path => ["${BUILD_DIR}/../../../../build/libs/esp32lib.avm"]
         }
     ]
 }.

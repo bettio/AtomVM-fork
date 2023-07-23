@@ -57,11 +57,16 @@ endmacro()
 
 macro(pack_lib avm_name)
 
+    set(ARCHIVES "")
     foreach(archive_name ${ARGN})
-        if(NOT ${archive_name} STREQUAL "exavmlib")
-            set(ARCHIVES ${ARCHIVES} ${CMAKE_BINARY_DIR}/libs/${archive_name}/src/${archive_name}.avm)
-        else()
+        if(${archive_name} STREQUAL "esp32boot")
+            set(ARCHIVES ${ARCHIVES} ${CMAKE_BINARY_DIR}/libs/${archive_name}/${archive_name}.avm)
+        elseif(${archive_name} STREQUAL "exavmlib")
             set(ARCHIVES ${ARCHIVES} ${CMAKE_BINARY_DIR}/libs/${archive_name}/lib/${archive_name}.avm)
+        elseif(${archive_name} STREQUAL "atomvmlib")
+            set(ARCHIVES ${ARCHIVES} ${CMAKE_BINARY_DIR}/libs/${archive_name}.avm)
+        else()
+            set(ARCHIVES ${ARCHIVES} ${CMAKE_BINARY_DIR}/libs/${archive_name}/src/${archive_name}.avm)
         endif()
         set(ARCHIVE_TARGETS ${ARCHIVE_TARGETS} ${archive_name})
     endforeach()
@@ -75,7 +80,7 @@ macro(pack_lib avm_name)
     add_custom_target(
         ${avm_name} ALL
         COMMAND ${CMAKE_BINARY_DIR}/tools/packbeam/PackBEAM -a ${INCLUDE_LINES} ${avm_name}.avm ${ARCHIVES}
-        COMMENT "Packing runnable ${avm_name}.avm"
+        COMMENT "Packing archive ${avm_name}.avm"
         VERBATIM
     )
     add_dependencies(${avm_name} ${ARCHIVE_TARGETS} PackBEAM)

@@ -40,6 +40,8 @@ else()
     pack_lib(atomvmlib eavmlib estdlib alisp)
 endif()
 
+pack_lib(esp32lib esp32boot atomvmlib)
+
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/atomvmlib.avm
     DESTINATION lib/atomvm

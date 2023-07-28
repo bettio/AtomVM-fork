@@ -24,27 +24,7 @@
 
 start() ->
     console:print(<<"AtomVM init.\n">>),
-
-    io:format("Starting application...~n"),
-
-    Exit =
-        try boot() of
-            Result -> {exit, Result}
-        catch
-            Error -> {crash, Error}
-        end,
-    erlang:display(Exit),
-
-    io:format("Looping...~n"),
-
-    loop().
-
-loop() ->
-    receive
-        Msg ->
-            erlang:display({received_message, Msg}),
-            loop()
-    end.
+    boot().
 
 maybe_start_dev_mode(SystemStatus) ->
     case {SystemStatus, esp:nvs_get_binary(atomvm, dev_mode)} of
@@ -68,6 +48,7 @@ boot() ->
         ok ->
             StartModule = get_start_module(),
             maybe_start_dev_mode(ok),
+            io:format("Starting application...~n"),
             StartModule:start();
         {error, Reason} ->
             io:format("Failed app start: ~p.~n", [Reason]),

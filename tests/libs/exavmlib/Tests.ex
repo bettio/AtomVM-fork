@@ -32,6 +32,7 @@ defmodule Tests do
     :ok = test_funs()
     :ok = test_enum()
     :ok = test_exception()
+    :ok = test_map_field()
     :ok = test_chars_protocol()
     :ok = test_inspect()
     :ok = test_base()
@@ -260,6 +261,46 @@ defmodule Tests do
 
     :ok
   end
+
+  defp test_map_field() do
+    map = a_map()
+    1 = map.a
+
+    # Every receiver below is hidden from the type checker, which reports a
+    # missing key and the deprecated spelling with parentheses at compile time.
+    1 = as_term(map).a()
+
+    %KeyError{key: :b, term: %{a: 1}} =
+      try do
+        as_term(map).b
+      rescue
+        e -> e
+      end
+
+    %BadMapError{term: {:tuple, 1}} =
+      try do
+        as_term(a_tuple()).a
+      rescue
+        e -> e
+      end
+
+    %BadMapError{term: nil} =
+      try do
+        as_term(a_nil()).a
+      rescue
+        e -> e
+      end
+
+    :ok
+  end
+
+  defp as_term(term), do: :erlang.element(1, {term})
+
+  defp a_map(), do: %{a: 1}
+
+  defp a_tuple(), do: {:tuple, 1}
+
+  defp a_nil(), do: nil
 
   def test_chars_protocol() do
     "" = String.Chars.to_string(nil)
